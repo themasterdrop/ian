@@ -23,8 +23,6 @@ def clasificar_edad(edad):
         return "Adulto"
     elif edad < 200:
         return "Adulto mayor"
-    else:
-        return "Desconocido"
 
 df['Rango de Edad'] = df['EDAD'].apply(clasificar_edad)
 
