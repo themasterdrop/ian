@@ -157,7 +157,10 @@ app_modalidad.layout = html.Div([
         template='plotly_white'
  )),
     dcc.Graph(id='bar-especialidad-modalidad', figure=px.bar(
-        x=[], y=[], title="Seleccione una modalidad en el gráfico de pastel"
+        pd.DataFrame(columns=['ESPECIALIDAD', 'DIFERENCIA_DIAS']),
+        x='ESPECIALIDAD',
+        y='DIFERENCIA_DIAS',
+        title="Seleccione una modalidad en el gráfico de pastel"
 ))
 ])
 
