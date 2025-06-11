@@ -58,7 +58,7 @@ server = Flask(__name__)
 @server.route('/')
 def index():
     return """<h2>Bienvenido</h2>
-<p>Visita <a href="/edad/">/edad/</a> o <a href="/espera/">/espera/</a></p>"""
+<p>Visita <a href="/edad/">/edad/</a>, <a href="/espera/">/espera/</a> o <a href="/modalidad/">/modalidad/</a></p>"""
 
 # App 1: Por Rango de Edad
 app_edad = dash.Dash(__name__, server=server, url_base_pathname='/edad/')
@@ -155,13 +155,13 @@ app_modalidad.layout = html.Div([
         names='PRESENCIAL_REMOTO',
         title='Distribución de Citas: Remotas vs Presenciales',
         template='plotly_white'
- )),
+    )),
     dcc.Graph(id='bar-especialidad-modalidad', figure=px.bar(
         pd.DataFrame(columns=['ESPECIALIDAD', 'DIFERENCIA_DIAS']),
         x='ESPECIALIDAD',
         y='DIFERENCIA_DIAS',
         title="Seleccione una modalidad en el gráfico de pastel"
-))
+    ))
 ])
 
 @app_modalidad.callback(
