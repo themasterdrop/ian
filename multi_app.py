@@ -146,6 +146,43 @@ def update_pie_chart_espera(clickData):
         height=600
     )
 
+# App 3: Por Modalidad de Cita
+app_modalidad = dash.Dash(__name__, server=server, url_base_pathname='/modalidad/')
+app_modalidad.layout = html.Div([
+    html.H1("Distribución por Modalidad de Cita"),
+    dcc.Graph(id='pie-modalidad', figure=px.pie(
+        df,
+        names='PRESENCIAL_REMOTO',
+        title='Distribución de Citas: Remotas vs Presenciales',
+        template='plotly_white'
+ )),
+    dcc.Graph(id='bar-especialidad-modalidad', figure=px.bar(
+        x=[], y=[], title="Seleccione una modalidad en el gráfico de pastel"
+))
+])
+
+@app_modalidad.callback(
+    Output('bar-especialidad-modalidad', 'figure'),
+    Input('pie-modalidad', 'clickData')
+)
+def update_bar_modalidad(clickData):
+    if clickData is None:
+        return px.bar(x=[], y=[], title="Seleccione una modalidad en el gráfico de pastel")
+
+    modalidad = clickData['points'][0]['label']
+    filtered_df = df[df['PRESENCIAL_REMOTO'] == modalidad]
+    mean_wait = filtered_df.groupby('ESPECIALIDAD')['DIFERENCIA_DIAS'].mean().reset_index()
+    mean_wait = mean_wait.sort_values(by='DIFERENCIA_DIAS', ascending=False)
+
+    return px.bar(
+        mean_wait,
+        x='ESPECIALIDAD',
+        y='DIFERENCIA_DIAS',
+        title=f"Media de Días de Espera por Especialidad ({modalidad})",
+        labels={'DIFERENCIA_DIAS': 'Días de Espera'},
+        template='plotly_white'
+ )
+    
 # Ejecutar el servidor
 if __name__ == '__main__':
     server.run(debug=True)
