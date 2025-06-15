@@ -70,6 +70,13 @@ def index():
             }
             h2 {
                 color: #2c3e50;
+            
+            .logo {
+                width: 80px;
+                height: auto;
+                margin-bottom: 20px;
+            }
+
             }
             .links {
                 margin-top: 30px;
