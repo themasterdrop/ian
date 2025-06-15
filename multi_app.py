@@ -63,21 +63,32 @@ def index():
         <title>Bienvenido</title>
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 background-color: #f4f6f8;
                 text-align: center;
                 padding: 50px;
+                color: #333
             }
             h2 {
                 color: #2c3e50;
-            
+            }
             .logo {
-                width: 80px;
+                width: 60px;
                 height: auto;
                 margin-bottom: 20px;
             }
+            
+            .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            max-width: 600px;
+            width: 100%;
+            }
 
-            }
+            
             .links {
                 margin-top: 30px;
             }
@@ -89,15 +100,17 @@ def index():
                 color: white;
                 text-decoration: none;
                 border-radius: 5px;
-                transition: background-color 0.3s ease;
+                transition: background-color 0.3s ease, transform 0.2s ease;
             }
             a:hover {
                 background-color: #2980b9;
+                transform: scale(1.05);
             }
         </style>
     </head>
     <body>
-        <img src="/static/logo.png" alt="Logo de la Institución" class="logo">
+      <div class="container">
+        <img src="/static/logo.png" alt="Logo de la Institución" class="logo" style="width: 60px; height: auto;">
         <h2>Bienvenido</h2>
         <p>Explora las siguientes visualizaciones:</p>
         <div class="links">
@@ -106,6 +119,7 @@ def index():
             <a href="/modalidad/">Modalidad de Atención</a>
             <a href="/asegurados/">Estado del Seguro</a>
         </div>
+      </div>
     </body>
     </html>
     """
