@@ -57,82 +57,78 @@ df['RANGO_DIAS'] = df['DIFERENCIA_DIAS'].apply(clasificar_dias)
 server = Flask(__name__)
 
 # Ruta raíz
+
 @server.route('/')
 def index():
     return render_template_string("""
-    <html>
-    <head>
-        <title>Bienvenido</title>
-        <style>
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: #f4f6f8;
-                text-align: center;
-                padding: 50px;
-                color: #333
-            }
-            h2 {
-                color: #2c3e50;
+    <html>
+    <head>
+        <title>Bienvenido</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f4f6f8;
+                text-align: center;
+                padding: 50px;
+                color: #333;
+            }
+            h2 {
+                 color: #2c3e50;
             }
             .logo {
                 width: 60px;
                 height: auto;
                 margin-bottom: 20px;
             }
-            
             .container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-            max-width: 600px;
-            width: 100%;
-            animation: fadeIn 1s ease-in-out;
+                background-color: white;
+                padding: 40px;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                display: inline-block;
+                max-width: 600px;
+                width: 100%;
+                animation: fadeIn 1s ease-in-out;
             }
-
-            
-            .links {
-                margin-top: 30px;
-            }
-            a {
-                display: inline-block;
-                margin: 10px;
+            .links {
+                margin-top: 30px;
+            }
+            a {
+                display: inline-block;
+                margin: 10px;
                 margin-bottom: 15px;
-                padding: 12px 24px;
-                background-color: #3498db;
-                color: white;
-                text-decoration: none;
-                border-radius: 5px;
-                transition: background-color 0.3s ease, transform 0.2s ease;
-            }
-            a:hover {
-                background-color: #2980b9;
-                transform: scale(1.05);
-            }
-            
-            @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+                padding: 12px 24px;
+                background-color: #3498db;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background-color 0.3s ease, transform 0.2s ease;
             }
-
-        </style>
-    </head>
-    <body>
-      <div class="container">
-        <img src="/static/logo.png" alt="Logo de la Institución" class="logo" style="width: 60px; height: auto;">
-        <h2>Bienvenido</h2>
-        <p>Explora las siguientes visualizaciones:</p>
-        <div class="links">
-            <a href="/edad/">Distribución por Edad</a>
-            <a href="/espera/">Tiempos de Espera</a>
-            <a href="/modalidad/">Modalidad de Atención</a>
-            <a href="/asegurados/">Estado del Seguro</a>
-        </div>
-      </div>
-    </body>
-    </html>
-    """)
+            a:hover {
+                background-color: #2980b9;
+                transform: scale(1.05);
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <img src="/static/logo.png" alt="Logo de la Institución" class="logo">
+            <h2>Bienvenido</h2>
+            <p>Explora las siguientes visualizaciones:</p>
+            <div class="links">
+                <a href="/edad/">Distribución por Edad</a>
+                <a href="/espera/">Tiempos de Espera</a>
+                <a href="/modalidad/">Modalidad de Atención</a>
+                <a href="/asegurados/">Estado del Seguro</a>
+            </div>
+        </div>
+    </body>
+    </html>
+    """)
 
 
 # App 1: Por Rango de Edad
