@@ -86,6 +86,7 @@ def index():
             display: inline-block;
             max-width: 600px;
             width: 100%;
+            animation: fadeIn 1s ease-in-out;
             }
 
             
@@ -95,6 +96,7 @@ def index():
             a {
                 display: inline-block;
                 margin: 10px;
+                margin-bottom: 15px;
                 padding: 12px 24px;
                 background-color: #3498db;
                 color: white;
@@ -106,6 +108,12 @@ def index():
                 background-color: #2980b9;
                 transform: scale(1.05);
             }
+            
+            @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+            }
+
         </style>
     </head>
     <body>
