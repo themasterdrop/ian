@@ -289,15 +289,15 @@ def update_bar_seguro(clickData):
     mean_wait = filtered_df.groupby('SEXO')['DIFERENCIA_DIAS'].mean().reset_index()
     mean_wait = mean_wait.sort_values(by='DIFERENCIA_DIAS', ascending=False)
 
-    return px.bar(
+    fig = px.bar(
         mean_wait,
         x='SEXO',
         y='DIFERENCIA_DIAS',
         title=f"Media de Días de Espera por SEXO ({seguro})",
         labels={'DIFERENCIA_DIAS': 'Días de Espera'},
         template='plotly_white'
- )
-    
+    )
+    fig.update_yaxes(range=[18, 21])
     
 # Ejecutar el servidor
 if __name__ == '__main__':
