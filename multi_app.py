@@ -5,6 +5,8 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
 import plotly.express as px
+from flask import render_template_string
+
 
 # Cargar los datos
 file_id = "1PWTw-akWr59Gu7MoHra5WXMKwllxK9bp"
@@ -57,7 +59,7 @@ server = Flask(__name__)
 # Ruta raíz
 @server.route('/')
 def index():
-    return """
+    return render_template_string("""
     <html>
     <head>
         <title>Bienvenido</title>
@@ -130,7 +132,7 @@ def index():
       </div>
     </body>
     </html>
-    """
+    """)
 
 
 # App 1: Por Rango de Edad
