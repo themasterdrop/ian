@@ -58,7 +58,7 @@ server = Flask(__name__)
 @server.route('/')
 def index():
     return """<h2>Bienvenido</h2>
-<p>Visita <a href="/edad/">/edad/</a>, <a href="/espera/">/espera/</a> o <a href="/modalidad/">/modalidad/</a></p>"""
+<p>Visita <a href="/edad/">/edad/</a>, <a href="/espera/">/espera/</a>, <a href="/modalidad/">/modalidad/</a></p> o <a href="/asegurados/">/asegurados/</a></p>"""
 
 # App 1: Por Rango de Edad
 app_edad = dash.Dash(__name__, server=server, url_base_pathname='/edad/')
@@ -185,6 +185,48 @@ def update_bar_modalidad(clickData):
         labels={'DIFERENCIA_DIAS': 'Días de Espera'},
         template='plotly_white'
  )
+
+
+# App 4: Por Estado de Seguro
+app_modalidad = dash.Dash(__name__, server=server, url_base_pathname='/asegurados/')
+app_modalidad.layout = html.Div([
+    html.H1("Distribución por Estado del Seguro"),
+    dcc.Graph(id='pie-seguro', figure=px.pie(
+        df,
+        names='SEGURO',
+        title='Distribución de Pacientes: Asegurados vs No Asegurados',
+        template='plotly_white'
+    )),
+    dcc.Graph(id='bar-espera-seguro', figure=px.bar(
+        pd.DataFrame(columns=['SEXO', 'DIFERENCIA_DIAS']),
+        x='SEXO',
+        y='DIFERENCIA_DIAS',
+        title="Seleccione una modalidad en el gráfico de pastel"
+    ))
+])
+
+@app_modalidad.callback(
+    Output('bar-espera-seguro', 'figure'),
+    Input('pie-seguro', 'clickData')
+)
+def update_bar_seguro(clickData):
+    if clickData is None:
+        return px.bar(x=[], y=[], title="Seleccione una modalidad en el gráfico de pastel")
+
+    seguro = clickData['points'][0]['label']
+    filtered_df = df[df['SEGURO'] == seguro]
+    mean_wait = filtered_df.groupby('SEXO')['DIFERENCIA_DIAS'].mean().reset_index()
+    mean_wait = mean_wait.sort_values(by='DIFERENCIA_DIAS', ascending=False)
+
+    return px.bar(
+        mean_wait,
+        x='SEXO',
+        y='DIFERENCIA_DIAS',
+        title=f"Media de Días de Espera por SEXO ({seguro})",
+        labels={'DIFERENCIA_DIAS': 'Días de Espera'},
+        template='plotly_white'
+ )
+    
     
 # Ejecutar el servidor
 if __name__ == '__main__':
