@@ -57,8 +57,52 @@ server = Flask(__name__)
 # Ruta raíz
 @server.route('/')
 def index():
-    return """<h2>Bienvenido</h2>
-<p>Visita <a href="/edad/">/edad/</a>, <a href="/espera/">/espera/</a>, <a href="/modalidad/">/modalidad/</a></p> o <a href="/asegurados/">/asegurados/</a></p>"""
+    return """
+    <html>
+    <head>
+        <title>Bienvenido</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f6f8;
+                text-align: center;
+                padding: 50px;
+            }
+            h2 {
+                color: #2c3e50;
+            }
+            .links {
+                margin-top: 30px;
+            }
+            a {
+                display: inline-block;
+                margin: 10px;
+                padding: 12px 24px;
+                background-color: #3498db;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+            a:hover {
+                background-color: #2980b9;
+            }
+        </style>
+    </head>
+    <body>
+        <img src="/static/logo.png" alt="Logo de la Institución" class="logo">
+        <h2>Bienvenido</h2>
+        <p>Explora las siguientes visualizaciones:</p>
+        <div class="links">
+            <a href="/edad/">Distribución por Edad</a>
+            <a href="/espera/">Tiempos de Espera</a>
+            <a href="/modalidad/">Modalidad de Atención</a>
+            <a href="/asegurados/">Estado del Seguro</a>
+        </div>
+    </body>
+    </html>
+    """
+
 
 # App 1: Por Rango de Edad
 app_edad = dash.Dash(__name__, server=server, url_base_pathname='/edad/')
@@ -192,7 +236,7 @@ app_modalidad = dash.Dash(__name__, server=server, url_base_pathname='/asegurado
 app_modalidad.layout = html.Div([
     html.H1("Distribución por Estado del Seguro"),
     dcc.Graph(id='pie-seguro', figure=px.pie(
-        df,
+        df.dropna(),
         names='SEGURO',
         title='Distribución de Pacientes: Asegurados vs No Asegurados',
         template='plotly_white'
