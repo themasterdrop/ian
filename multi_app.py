@@ -307,7 +307,7 @@ df['MES'] = df['DIA_SOLICITACITA'].dt.to_period('M').astype(str)
 citas_por_mes = df.groupby('MES').size().reset_index(name='CANTIDAD_CITAS')
 
 
-app = Dash(__name__, server=server, url_base_pathname='/tiempo/')
+app = dash.Dash(__name__, server=server, url_base_pathname='/tiempo/')
 app.layout = html.Div([
     html.H1("Citas Agendadas por Mes"),
     dcc.Graph(
