@@ -338,10 +338,6 @@ def actualizar_graficos(clickData):
 
     return fig_especialidades, fig_atencion
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
-
-    
 # Ejecutar el servidor
 if __name__ == '__main__':
     server.run(debug=True)
