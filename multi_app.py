@@ -333,7 +333,17 @@ def actualizar_graficos(clickData):
     mes_seleccionado = pd.to_datetime(clickData['points'][0]['x']).to_period('M').strftime('%Y-%m')
     df_mes = df[df['MES'] == mes_seleccionado]
 
-    fig_especialidades = px.pie(df_mes, names='ESPECIALIDAD', title=f'Distribución de Especialidades en {mes_seleccionado}')
+    top_especialidades = df_mes['ESPECIALIDAD'].value_counts().nlargest(5)
+    df_mes['ESPECIALIDAD_AGRUPADA'] = df_mes['ESPECIALIDAD'].apply(
+        lambda x: x if x in top_especialidades.index else 'Otras'
+    )
+
+    grouped = df_mes['ESPECIALIDAD_AGRUPADA'].value_counts().reset_index()
+    grouped.columns = ['ESPECIALIDAD', 'CUENTA']
+    grouped = grouped.sort_values(by='CUENTA', ascending=False)
+
+    
+    fig_especialidades = px.pie(grouped, names='ESPECIALIDAD', values="CUENTA", title=f'Distribución de Especialidades en {mes_seleccionado}')
     fig_atencion = px.pie(df_mes, names='ATENDIDO', title=f'Estado de Atención en {mes_seleccionado}')
 
     return fig_especialidades, fig_atencion
