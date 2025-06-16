@@ -330,7 +330,7 @@ def actualizar_graficos(clickData):
     if clickData is None:
         return px.pie(names=[], values=[], title="Seleccione un mes"), px.pie(names=[], values=[], title="Seleccione un mes")
 
-    mes_seleccionado = clickData['points'][0]['x']
+    mes_seleccionado = pd.to_datetime(clickData['points'][0]['x']).to_period('M').strftime('%Y-%m')
     df_mes = df[df['MES'] == mes_seleccionado]
 
     fig_especialidades = px.pie(df_mes, names='ESPECIALIDAD', title=f'Distribución de Especialidades en {mes_seleccionado}')
