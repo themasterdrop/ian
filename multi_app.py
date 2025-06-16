@@ -76,7 +76,7 @@ def index():
                  color: #2c3e50;
             }
             .logo {
-                width: 60px;
+                width: 80px;
                 height: auto;
                 margin-bottom: 20px;
             }
