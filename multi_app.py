@@ -124,6 +124,7 @@ def index():
                 <a href="/espera/">Tiempos de Espera</a>
                 <a href="/modalidad/">Modalidad de Atención</a>
                 <a href="/asegurados/">Estado del Seguro</a>
+                <a href="/tiempo/">Línea de Tiempo</a>
             </div>
         </div>
     </body>
@@ -298,6 +299,47 @@ def update_bar_seguro(clickData):
         template='plotly_white'
     )
     fig.update_yaxes(range=[18, 21])
+
+# App 5: Línea de Tiempo
+
+df['MES'] = df['DIA_SOLICITACITA'].dt.to_period('M').astype(str)
+citas_por_mes = df.groupby('MES').size().reset_index(name='CANTIDAD_CITAS')
+
+
+app = Dash(__name__, server=server, url_base_pathname='/tiempo/')
+app.layout = html.Div([
+    html.H1("Citas Agendadas por Mes"),
+    dcc.Graph(
+        id='grafico-lineal',
+        figure=px.line(citas_por_mes, x='MES', y='CANTIDAD_CITAS', markers=True,
+                       title='Cantidad de Citas por Mes')
+    ),
+    html.Div([
+        dcc.Graph(id='grafico-pie-especialidades'),
+        dcc.Graph(id='grafico-pie-atencion')
+    ])
+])
+
+@app.callback(
+    [Output('grafico-pie-especialidades', 'figure'),
+     Output('grafico-pie-atencion', 'figure')],
+    [Input('grafico-lineal', 'clickData')]
+)
+def actualizar_graficos(clickData):
+    if clickData is None:
+        return px.pie(names=[], values=[], title="Seleccione un mes"), px.pie(names=[], values=[], title="Seleccione un mes")
+
+    mes_seleccionado = clickData['points'][0]['x']
+    df_mes = df[df['MES'] == mes_seleccionado]
+
+    fig_especialidades = px.pie(df_mes, names='ESPECIALIDAD', title=f'Distribución de Especialidades en {mes_seleccionado}')
+    fig_atencion = px.pie(df_mes, names='ATENDIDO', title=f'Estado de Atención en {mes_seleccionado}')
+
+    return fig_especialidades, fig_atencion
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
+
     
 # Ejecutar el servidor
 if __name__ == '__main__':
