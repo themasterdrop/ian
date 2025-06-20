@@ -453,6 +453,14 @@ especialidades = {17: 'GERIATRIA',
  60: 'URODINAMIA',
  15: 'ENDOCRINOLOGIA TUBERCULOSIS'}
 
+sexo_opciones = {0:"FEMENINO", 
+                 1:"MASCULINO"}
+
+seguro_opciones = {0:"NO", 
+                 1:"SI"}
+modalidad_opciones = {0:"PRESENCIAL", 
+                 1:"REMOTO"}
+
 simulador_app = Dash(__name__, server=server, url_base_pathname='/simulador/')
 
 simulador_app.layout = html.Div([
@@ -469,14 +477,29 @@ simulador_app.layout = html.Div([
     html.Label("Edad:"),
     dcc.Input(id='input-edad', type='number', value=30),
 
-    html.Label("Sexo (cod):"),
-    dcc.Input(id='input-sexo', type='number', value=1),
+    html.Label("Sexo:"),
+    dcc.Dropdown(
+    id='input-sexo',
+    options=[{'label': v, 'value': k} for k, v in sexo_opciones.items()],
+    value=1,
+    placeholder="Selecciona el sexo"
+    ),
 
-    html.Label("Seguro (cod):"),
-    dcc.Input(id='input-seguro', type='number', value=1),
+    html.Label("Seguro:"),
+    dcc.Dropdown(
+    id='input-seguro',
+    options=[{'label': v, 'value': k} for k, v in seguro_opciones.items()],
+    value=1,
+    placeholder="Selecciona el tipo de seguro"
+    ),
 
-    html.Label("Presencial/Remoto (cod):"),
-    dcc.Input(id='input-modalidad', type='number', value=1),
+    html.Label("Modalidad de la cita:"),
+    dcc.Dropdown(
+    id='input-modalidad',
+    options=[{'label': v, 'value': k} for k, v in modalidad_opciones.items()],
+    value=1,
+    placeholder="Selecciona la modalidad"
+    ),
 
     html.Label("Monto:"),
     dcc.Input(id='input-monto', type='number', value=100),
