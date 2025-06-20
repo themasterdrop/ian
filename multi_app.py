@@ -17,15 +17,12 @@ from werkzeug.serving import run_simple
 
 # Obtener fecha actual
 hoy = datetime.today()
-anio_actual = hoy.year
-mes_actual = hoy.month
 dia_actual = hoy.day
-dia_semana = hoy.weekday()  # 0 = lunes, 6 = domingo
 semana_anio = hoy.isocalendar()[1]
 
 
 # Cargar modelo desde Dropbox
-dropbox_url = "https://www.dropbox.com/scl/fi/t3etpzlzxsnzpr83z4ybh/modelo_forest.pkl?rlkey=km0hf7hrab983jbz5oyal17m1&st=a0k5twnf&dl=1"
+dropbox_url = "https://www.dropbox.com/scl/fi/g5kzwsbutmclusnx651iw/modelo_forest.pkl?rlkey=b9zesebb0m56rgtucqy3qwk45&st=hw0hxd1j&dl=1"
 modelo_path = "modelo_forest.pkl"
 
 if not os.path.exists(modelo_path):
