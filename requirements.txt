@@ -1,8 +1,8 @@
 dash
-pandas
+pandas==2.2.2
 plotly
 gunicorn
-joblib
+joblib==1.5.1
 flask
 numpy
 scikit-learn==1.6.1
