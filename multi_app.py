@@ -12,6 +12,8 @@ import io
 import os
 from datetime import datetime
 import numpy as np
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from werkzeug.serving import run_simple
 
 # Obtener fecha actual
 hoy = datetime.today()
@@ -20,14 +22,10 @@ mes_actual = hoy.month
 dia_actual = hoy.day
 dia_semana = hoy.weekday()  # 0 = lunes, 6 = domingo
 semana_anio = hoy.isocalendar()[1]
-es_fin_semana = 1 if dia_semana >= 5 else 0
-mes_sin = np.sin(2 * np.pi * mes_actual / 12)
-mes_cos = np.cos(2 * np.pi * mes_actual / 12)
-
 
 
 # Cargar modelo desde Dropbox
-dropbox_url = "https://www.dropbox.com/scl/fi/haowsa1xa6h237hkylrrq/modelo_forest.pkl?rlkey=fa0kyl5uvfoebz8x6u0tj4dgb&st=xjzjefa0&dl=1"
+dropbox_url = "https://www.dropbox.com/scl/fi/t3etpzlzxsnzpr83z4ybh/modelo_forest.pkl?rlkey=km0hf7hrab983jbz5oyal17m1&st=a0k5twnf&dl=1"
 modelo_path = "modelo_forest.pkl"
 
 if not os.path.exists(modelo_path):
@@ -295,8 +293,8 @@ def update_bar_modalidad(clickData):
 
 
 # App 4: Por Estado de Seguro
-app_modalidad = dash.Dash(__name__, server=server, url_base_pathname='/asegurados/')
-app_modalidad.layout = html.Div([
+app_seguro = dash.Dash(__name__, server=server, url_base_pathname='/asegurados/')
+app_segurolayout = html.Div([
     html.H1("Distribución por Estado del Seguro"),
     dcc.Graph(id='pie-seguro', figure=px.pie(
         df.dropna(),
@@ -312,7 +310,7 @@ app_modalidad.layout = html.Div([
     ))
 ])
 
-@app_modalidad.callback(
+@app_seguro.callback(
     Output('bar-espera-seguro', 'figure'),
     Input('pie-seguro', 'clickData')
 )
@@ -467,15 +465,7 @@ especialidades = {17: 'GERIATRIA',
  60: 'URODINAMIA',
  15: 'ENDOCRINOLOGIA TUBERCULOSIS'}
 
-sexo_opciones = {0:"FEMENINO", 
-                 1:"MASCULINO"}
-
-seguro_opciones = {0:"NO", 
-                 1:"SI"}
-modalidad_opciones = {0:"PRESENCIAL", 
-                 1:"REMOTO"}
-
-simulador_app = Dash(__name__, server=server, url_base_pathname='/simulador/')
+simulador_app = dash.Dash(__name__, server=server, url_base_pathname='/simulador/')
 
 simulador_app.layout = html.Div([
     html.H2("Simulador de Tiempo de Espera de Citas"),
@@ -491,61 +481,11 @@ simulador_app.layout = html.Div([
     html.Label("Edad:"),
     dcc.Input(id='input-edad', type='number', value=30),
 
-    html.Label("Sexo:"),
-    dcc.Dropdown(
-    id='input-sexo',
-    options=[{'label': v, 'value': k} for k, v in sexo_opciones.items()],
-    value=1,
-    placeholder="Selecciona el sexo"
-    ),
-
-    html.Label("Seguro:"),
-    dcc.Dropdown(
-    id='input-seguro',
-    options=[{'label': v, 'value': k} for k, v in seguro_opciones.items()],
-    value=1,
-    placeholder="Selecciona el tipo de seguro"
-    ),
-
-    html.Label("Modalidad de la cita:"),
-    dcc.Dropdown(
-    id='input-modalidad',
-    options=[{'label': v, 'value': k} for k, v in modalidad_opciones.items()],
-    value=1,
-    placeholder="Selecciona la modalidad"
-    ),
-
-    html.Label("Monto:"),
-    dcc.Input(id='input-monto', type='number', value=100),
-
-    html.Label("Año:"),
-    dcc.Input(id='input-anio', type='number', value=anio_actual),
-
-    html.Label("Mes:"),
-    dcc.Input(id='input-mes', type='number', value=mes_actual),
-
     html.Label("Día:"),
     dcc.Input(id='input-dia', type='number', value=dia_actual),
 
-    html.Label("Día de la semana:"),
-    dcc.Input(id='input-dia_semana', type='number', value=dia_semana),
-
     html.Label("Semana del año:"),
     dcc.Input(id='input-semana_anio', type='number', value=semana_anio),
-
-    html.Label("¿Es fin de semana?"),
-    dcc.Dropdown(
-       id='input-fin_semana',
-       options=[{'label': 'No', 'value': 0}, {'label': 'Sí', 'value': 1}],
-       value=es_fin_semana
-    ),
-
-    html.Label("Mes seno:"),
-    dcc.Input(id='input-mes_sin', type='number', value=mes_sin),
-
-    html.Label("Mes coseno:"),
-    dcc.Input(id='input-mes_cos', type='number', value=mes_cos),
-
 
     html.Br(),
     html.Button("Predecir", id='btn-predecir', n_clicks=0),
@@ -556,27 +496,16 @@ simulador_app.layout = html.Div([
     Output('output-prediccion', 'children'),
     Input('btn-predecir', 'n_clicks'),
     Input('input-especialidad', 'value'),
-    Input('input-sexo', 'value'),
     Input('input-edad', 'value'),
-    Input('input-seguro', 'value'),
-    Input('input-modalidad', 'value'),
-    Input('input-monto', 'value'),
-    Input('input-anio', 'value'),
-    Input('input-mes', 'value'),
     Input('input-dia', 'value'),
-    Input('input-dia_semana', 'value'),
     Input('input-semana_anio', 'value'),
-    Input('input-fin_semana', 'value'),
-    Input('input-mes_sin', 'value'),
-    Input('input-mes_cos', 'value'),
 )
-def predecir(n_clicks, especialidad, sexo, edad, seguro, modalidad, monto,
-             anio, mes, dia, dia_semana, semana_anio, fin_semana, mes_sin, mes_cos):
+def predecir(n_clicks, especialidad, edad, dia, semana_anio):
     if n_clicks > 0:
+        if edad is None or edad < 0 or edad > 120:
+            return "Edad no válida."
         entrada = [[
-            especialidad, sexo, edad, seguro, modalidad, monto,
-            anio, mes, dia, dia_semana, semana_anio, fin_semana,
-            mes_sin, mes_cos
+            especialidad, edad, dia, semana_anio
         ]]
         prediccion = modelo_forest.predict(entrada)[0]
         nombre_especialidad = especialidades.get(especialidad, "Desconocida")
@@ -587,6 +516,16 @@ def predecir(n_clicks, especialidad, sexo, edad, seguro, modalidad, monto,
 
 
 
-# Ejecutar el servidor
+application = DispatcherMiddleware(server, {
+    '/edad': app_edad.server,
+    '/espera': app_espera.server,
+    '/modalidad': app_modalidad.server,
+    '/asegurados': app_seguro.server,
+    '/tiempo': app.server,
+    '/simulador': simulador_app.server,
+})
+
 if __name__ == '__main__':
-    server.run(debug=True)
+    port = int(os.environ.get("PORT", 8050))
+    run_simple('0.0.0.0', port, application, use_reloader=False)
+
