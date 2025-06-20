@@ -9,10 +9,24 @@ from flask import render_template_string
 import joblib
 import requests
 import io
+import os
+from datetime import datetime
+import numpy as np
+
+# Obtener fecha actual
+hoy = datetime.today()
+anio_actual = hoy.year
+mes_actual = hoy.month
+dia_actual = hoy.day
+dia_semana = hoy.weekday()  # 0 = lunes, 6 = domingo
+semana_anio = hoy.isocalendar()[1]
+es_fin_semana = 1 if dia_semana >= 5 else 0
+mes_sin = np.sin(2 * np.pi * mes_actual / 12)
+mes_cos = np.cos(2 * np.pi * mes_actual / 12)
+
+
 
 # Cargar modelo desde Dropbox
-import os
-
 dropbox_url = "https://www.dropbox.com/scl/fi/haowsa1xa6h237hkylrrq/modelo_forest.pkl?rlkey=fa0kyl5uvfoebz8x6u0tj4dgb&st=xjzjefa0&dl=1"
 modelo_path = "modelo_forest.pkl"
 
@@ -505,28 +519,33 @@ simulador_app.layout = html.Div([
     dcc.Input(id='input-monto', type='number', value=100),
 
     html.Label("Año:"),
-    dcc.Input(id='input-anio', type='number', value=2025),
+    dcc.Input(id='input-anio', type='number', value=anio_actual),
 
     html.Label("Mes:"),
-    dcc.Input(id='input-mes', type='number', value=6),
+    dcc.Input(id='input-mes', type='number', value=mes_actual),
 
     html.Label("Día:"),
-    dcc.Input(id='input-dia', type='number', value=20),
+    dcc.Input(id='input-dia', type='number', value=dia_actual),
 
     html.Label("Día de la semana:"),
-    dcc.Input(id='input-dia_semana', type='number', value=4),
+    dcc.Input(id='input-dia_semana', type='number', value=dia_semana),
 
     html.Label("Semana del año:"),
-    dcc.Input(id='input-semana_anio', type='number', value=25),
+    dcc.Input(id='input-semana_anio', type='number', value=semana_anio),
 
-    html.Label("¿Es fin de semana? (0/1):"),
-    dcc.Input(id='input-fin_semana', type='number', value=0),
+    html.Label("¿Es fin de semana?"),
+    dcc.Dropdown(
+       id='input-fin_semana',
+       options=[{'label': 'No', 'value': 0}, {'label': 'Sí', 'value': 1}],
+       value=es_fin_semana
+    ),
 
     html.Label("Mes seno:"),
-    dcc.Input(id='input-mes_sin', type='number', value=np.sin(2 * np.pi * 6 / 12)),
+    dcc.Input(id='input-mes_sin', type='number', value=mes_sin),
 
     html.Label("Mes coseno:"),
-    dcc.Input(id='input-mes_cos', type='number', value=np.cos(2 * np.pi * 6 / 12)),
+    dcc.Input(id='input-mes_cos', type='number', value=mes_cos),
+
 
     html.Br(),
     html.Button("Predecir", id='btn-predecir', n_clicks=0),
