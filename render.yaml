@@ -1,7 +1,10 @@
 services:
   - type: web
-    name: dash-app
+    name: multiapp-dash
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn multi_app:server
+    buildCommand: ""
+    startCommand: gunicorn multi_app:application
+    envVars:
+      - key: PORT
+        value: 10000
