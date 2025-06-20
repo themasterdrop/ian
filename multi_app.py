@@ -378,16 +378,85 @@ def actualizar_graficos(clickData):
     return fig_especialidades, fig_atencion
 
 # Crear una nueva app Dash para el simulador
+especialidades = {17: 'GERIATRIA', 
+ 16: 'GASTROENTEROLOGIA',
+ 13: 'ENDOCRINOLOGIA',
+ 51: 'PSIQUIATRIA',
+ 2: 'CARDIOLOGIA',
+ 61: 'UROLOGIA',
+ 50: 'PSICOLOGIA',
+ 6: 'CIRUGIA GENERAL',
+ 34: 'NEUROLOGIA',
+ 20: 'HEMATOLOGIA',
+ 26: 'MEDICINA INTERNA',
+ 42: 'OFTALMOLOGIA', 
+ 54: 'REUMATOLOGIA',
+ 4: 'CIRUGIA  PLASTICA Y QUEMADOS',
+ 33: 'NEUROCIRUGIA',
+ 48: 'PEDIATRIA GENERAL',
+ 27: 'NEFROLOGIA',
+ 35: 'NEUROLOGIA  PEDIATRICA',
+ 40: 'OBSTETRICIA',
+ 29: 'NEUMOLOGIA',
+ 43: 'ONCOLOGIA GINECOLOGIA',
+ 28: 'NEONATOLOGIA',
+ 21: 'INFECTOLOGIA',
+ 0: 'ADOLESCENTE',
+ 18: 'GINECOLOGIA',
+ 10: 'DERMATOLOGIA',
+ 8: 'CIRUGIA PEDIATRICA',
+ 56: 'TRAUMATOLOGIA',
+ 47: 'PATOLOGIA MAMARIA',
+ 46: 'OTORRINOLARINGOLOGIA',
+ 12: 'ECOGRAFIA',
+ 25: 'MEDICINA FÍSICA Y REHABILITACIÓN',
+ 31: 'NEUMOLOGIA PEDIATRICA',
+ 44: 'ONCOLOGIA MEDICA',
+ 5: 'CIRUGIA CABEZA Y CUELLO',
+ 7: 'CIRUGIA MAXILO-FACIAL',
+ 19: 'GINECOLOGIA DE ALTO RIESGO',
+ 36: 'NEUROPSICOLOGIA',
+ 52: 'PUERPERIO',
+ 59: 'UNIDAD DEL DOLOR Y CUIDADOS PALIATIVOS',
+ 3: 'CARDIOLOGIA PEDIATRICA',
+ 41: 'ODONTOLOGIA',
+ 53: 'RADIOTERAPIA',
+ 9: 'CIRUGIA TORAXICA',
+ 37: 'NUTRICION - ENDOCRINOLOGIA',
+ 57: 'TUBERCULOSIS',
+ 38: 'NUTRICION - MEDICINA',
+ 22: 'INFECTOLOGIA PEDIATRICA',
+ 30: 'NEUMOLOGIA FUNCION RESPIRATORIA',
+ 39: 'NUTRICION - PEDIATRICA',
+ 14: 'ENDOCRINOLOGIA PEDIATRICA',
+ 55: 'SALUD MENTAL ',
+ 23: 'INFERTILIDAD',
+ 45: 'ONCOLOGIA QUIRURGICA',
+ 32: 'NEUMOLOGIA TEST DE CAMINATA',
+ 49: 'PLANIFICACION FAMILIAR',
+ 24: 'MEDICINA ALTERNATIVA',
+ 1: 'ANESTESIOLOGIA',
+ 11: 'DERMATOLOGIA PEDIATRICA',
+ 58: 'TUBERCULOSIS PEDIATRICA',
+ 62: 'ZPRUEBA',
+ 60: 'URODINAMIA',
+ 15: 'ENDOCRINOLOGIA TUBERCULOSIS'}
+
 simulador_app = Dash(__name__, server=server, url_base_pathname='/simulador/')
 
 simulador_app.layout = html.Div([
     html.H2("Simulador de Tiempo de Espera de Citas"),
     
+    html.Label("Especialidad:"),
+    dcc.Dropdown(
+    id='input-especialidad',
+    options=[{'label': k, 'value': v} for k, v in especialidades.items()],
+    value=1,
+    placeholder="Selecciona una especialidad"
+    ),
+    
     html.Label("Edad:"),
     dcc.Input(id='input-edad', type='number', value=30),
-
-    html.Label("Especialidad (cod):"),
-    dcc.Input(id='input-especialidad', type='number', value=1),
 
     html.Label("Sexo (cod):"),
     dcc.Input(id='input-sexo', type='number', value=1),
@@ -457,7 +526,9 @@ def predecir(n_clicks, especialidad, sexo, edad, seguro, modalidad, monto,
             mes_sin, mes_cos
         ]]
         prediccion = modelo_forest.predict(entrada)[0]
-        return f"Tiempo estimado de espera: {prediccion:.2f} días"
+        nombre_especialidad = especialidades.get(especialidad, "Desconocida")
+        return f"Especialidad: {nombre_especialidad} — Tiempo estimado de espera: {prediccion:.2f} días"
+
     return ""
 
 
