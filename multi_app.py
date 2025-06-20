@@ -22,7 +22,7 @@ semana_anio = hoy.isocalendar()[1]
 
 
 # Cargar modelo desde Dropbox
-dropbox_url = "https://www.dropbox.com/scl/fi/lnhp95sm73e8av5bssdei/modelo_forest.pkl?rlkey=wo9ocbs3wqr3hclfpfl3uize5&st=20dx6uv3&dl=1"
+dropbox_url = "https://www.dropbox.com/scl/fi/somo7gl8ugbij77c39n69/modelo_forest.pkl?rlkey=ts50pm44r7tvrx1wpnvc7zcil&st=rbjnpvtu&dl=1"
 modelo_path = "modelo_forest.pkl"
 
 if not os.path.exists(modelo_path):
