@@ -5,3 +5,4 @@ gunicorn
 joblib
 flask
 numpy
+scikit-learn
