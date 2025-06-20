@@ -10,10 +10,21 @@ import joblib
 import requests
 import io
 
-# Cargar modelo desde Google Drive
-modelo_url = "https://drive.google.com/uc?export=download&id=1_5reksqv642oVRoPMp3e12GVd3GWVJJg"
-modelo_bytes = requests.get(modelo_url).content
-modelo_forest = joblib.load(io.BytesIO(modelo_bytes))
+# Cargar modelo desde Dropbox
+import os
+
+dropbox_url = "https://www.dropbox.com/scl/fi/haowsa1xa6h237hkylrrq/modelo_forest.pkl?rlkey=fa0kyl5uvfoebz8x6u0tj4dgb&st=xjzjefa0&dl=1"
+modelo_path = "modelo_forest.pkl"
+
+if not os.path.exists(modelo_path):
+    print("Descargando modelo desde Dropbox...")
+    r = requests.get(dropbox_url, stream=True)
+    with open(modelo_path, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=8192):
+            f.write(chunk)
+    print("Modelo descargado.")
+
+modelo_forest = joblib.load(modelo_path)
 
 
 
