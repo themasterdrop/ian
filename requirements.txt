@@ -6,3 +6,4 @@ joblib
 flask
 numpy
 scikit-learn
+requests
