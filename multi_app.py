@@ -282,11 +282,25 @@ app_modalidad.layout = html.Div([
     Input('pie-seguro', 'clickData')
 )
 def update_bar_seguro(clickData):
-    if clickData is None:
-        return px.bar(x=[], y=[], title="Seleccione una modalidad en el gráfico de pastel")
+    if clickData is None or 'label' not in clickData['points'][0]:
+        return px.bar(
+            pd.DataFrame(columns=['SEXO', 'DIFERENCIA_DIAS']),
+            x='SEXO',
+            y='DIFERENCIA_DIAS',
+            title="Seleccione una modalidad en el gráfico de pastel"
+        )
 
     seguro = clickData['points'][0]['label']
     filtered_df = df[df['SEGURO'] == seguro]
+
+    if filtered_df.empty:
+        return px.bar(
+            pd.DataFrame(columns=['SEXO', 'DIFERENCIA_DIAS']),
+            x='SEXO',
+            y='DIFERENCIA_DIAS',
+            title=f"No hay datos para {seguro}"
+        )
+
     mean_wait = filtered_df.groupby('SEXO')['DIFERENCIA_DIAS'].mean().reset_index()
     mean_wait = mean_wait.sort_values(by='DIFERENCIA_DIAS', ascending=False)
 
@@ -298,7 +312,12 @@ def update_bar_seguro(clickData):
         labels={'DIFERENCIA_DIAS': 'Días de Espera'},
         template='plotly_white'
     )
-    fig.update_yaxes(range=[18, 21])
+
+    y_min = mean_wait['DIFERENCIA_DIAS'].min() - 1
+    y_max = mean_wait['DIFERENCIA_DIAS'].max() + 1
+    fig.update_yaxes(range=[y_min, y_max])
+
+    return fig
 
 # App 5: Línea de Tiempo
 
