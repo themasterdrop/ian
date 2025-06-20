@@ -6,6 +6,15 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 import plotly.express as px
 from flask import render_template_string
+import joblib
+import requests
+import io
+
+# Cargar modelo desde Google Drive
+modelo_url = "https://drive.google.com/uc?export=download&id=1_5reksqv642oVRoPMp3e12GVd3GWVJJg"
+modelo_bytes = requests.get(modelo_url).content
+modelo_forest = joblib.load(io.BytesIO(modelo_bytes))
+
 
 
 # Cargar los datos
@@ -125,6 +134,7 @@ def index():
                 <a href="/modalidad/">Modalidad de Atención</a>
                 <a href="/asegurados/">Estado del Seguro</a>
                 <a href="/tiempo/">Línea de Tiempo</a>
+                <a href="/simulador/">Simulador de Tiempo de Espera</a>
             </div>
         </div>
     </body>
@@ -366,6 +376,92 @@ def actualizar_graficos(clickData):
     fig_atencion = px.pie(df_mes, names='ATENDIDO', title=f'Estado de Atención en {mes_seleccionado}')
 
     return fig_especialidades, fig_atencion
+
+# Crear una nueva app Dash para el simulador
+simulador_app = Dash(__name__, server=server, url_base_pathname='/simulador/')
+
+simulador_app.layout = html.Div([
+    html.H2("Simulador de Tiempo de Espera de Citas"),
+    
+    html.Label("Edad:"),
+    dcc.Input(id='input-edad', type='number', value=30),
+
+    html.Label("Especialidad (cod):"),
+    dcc.Input(id='input-especialidad', type='number', value=1),
+
+    html.Label("Sexo (cod):"),
+    dcc.Input(id='input-sexo', type='number', value=1),
+
+    html.Label("Seguro (cod):"),
+    dcc.Input(id='input-seguro', type='number', value=1),
+
+    html.Label("Presencial/Remoto (cod):"),
+    dcc.Input(id='input-modalidad', type='number', value=1),
+
+    html.Label("Monto:"),
+    dcc.Input(id='input-monto', type='number', value=100),
+
+    html.Label("Año:"),
+    dcc.Input(id='input-anio', type='number', value=2025),
+
+    html.Label("Mes:"),
+    dcc.Input(id='input-mes', type='number', value=6),
+
+    html.Label("Día:"),
+    dcc.Input(id='input-dia', type='number', value=20),
+
+    html.Label("Día de la semana:"),
+    dcc.Input(id='input-dia_semana', type='number', value=4),
+
+    html.Label("Semana del año:"),
+    dcc.Input(id='input-semana_anio', type='number', value=25),
+
+    html.Label("¿Es fin de semana? (0/1):"),
+    dcc.Input(id='input-fin_semana', type='number', value=0),
+
+    html.Label("Mes seno:"),
+    dcc.Input(id='input-mes_sin', type='number', value=np.sin(2 * np.pi * 6 / 12)),
+
+    html.Label("Mes coseno:"),
+    dcc.Input(id='input-mes_cos', type='number', value=np.cos(2 * np.pi * 6 / 12)),
+
+    html.Br(),
+    html.Button("Predecir", id='btn-predecir', n_clicks=0),
+    html.Div(id='output-prediccion')
+])
+
+@simulador_app.callback(
+    Output('output-prediccion', 'children'),
+    Input('btn-predecir', 'n_clicks'),
+    Input('input-especialidad', 'value'),
+    Input('input-sexo', 'value'),
+    Input('input-edad', 'value'),
+    Input('input-seguro', 'value'),
+    Input('input-modalidad', 'value'),
+    Input('input-monto', 'value'),
+    Input('input-anio', 'value'),
+    Input('input-mes', 'value'),
+    Input('input-dia', 'value'),
+    Input('input-dia_semana', 'value'),
+    Input('input-semana_anio', 'value'),
+    Input('input-fin_semana', 'value'),
+    Input('input-mes_sin', 'value'),
+    Input('input-mes_cos', 'value'),
+)
+def predecir(n_clicks, especialidad, sexo, edad, seguro, modalidad, monto,
+             anio, mes, dia, dia_semana, semana_anio, fin_semana, mes_sin, mes_cos):
+    if n_clicks > 0:
+        entrada = [[
+            especialidad, sexo, edad, seguro, modalidad, monto,
+            anio, mes, dia, dia_semana, semana_anio, fin_semana,
+            mes_sin, mes_cos
+        ]]
+        prediccion = modelo_forest.predict(entrada)[0]
+        return f"Tiempo estimado de espera: {prediccion:.2f} días"
+    return ""
+
+
+
 
 # Ejecutar el servidor
 if __name__ == '__main__':
