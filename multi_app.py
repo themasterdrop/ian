@@ -370,7 +370,7 @@ app_tiempo.layout = html.Div([
     ])
 ])
 
-@app.callback(
+@app_tiempo.callback(
     [Output('grafico-pie-especialidades', 'figure'),
      Output('grafico-pie-atencion', 'figure')],
     [Input('grafico-lineal', 'clickData')]
