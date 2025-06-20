@@ -291,7 +291,7 @@ def update_bar_modalidad(clickData):
 
 # App 4: Por Estado de Seguro
 app_seguro = dash.Dash(__name__, server=server, url_base_pathname='/asegurados/')
-app_segurolayout = html.Div([
+app_seguro.layout = html.Div([
     html.H1("Distribución por Estado del Seguro"),
     dcc.Graph(id='pie-seguro', figure=px.pie(
         df.dropna(),
