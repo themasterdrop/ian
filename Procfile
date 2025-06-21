@@ -1,1 +1,1 @@
-web: gunicorn multiapp:application
+web: gunicorn multi_app:application
