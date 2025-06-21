@@ -164,7 +164,7 @@ def index():
 
 
 # App 1: Por Rango de Edad
-app_edad = dash.Dash(__name__, server=server, url_base_pathname='/edad/',
+app_edad = dash.Dash(__name__, server=server,
                      requests_pathname_prefix='/edad/',
                      routes_pathname_prefix='/edad/')
 
@@ -210,7 +210,7 @@ def update_pie_chart_edad(clickData):
     )
 
 # App 2: Por Rango de Días de Espera
-app_espera = dash.Dash(__name__, server=server, url_base_pathname='/espera/',
+app_espera = dash.Dash(__name__, server=server,
                        requests_pathname_prefix='/espera/',
                        routes_pathname_prefix='/espera/')
 
@@ -256,9 +256,9 @@ def update_pie_chart_espera(clickData):
     )
 
 # App 3: Por Modalidad de Cita
-app_modalidad = dash.Dash(__name__, server=server, url_base_pathname='/modalidad/',
-                          requests_pathname_prefix='/modalidad/',
-                          routes_pathname_prefix='/modalidad/')
+app_modalidad = dash.Dash(__name__, server=server,
+                           requests_pathname_prefix='/modalidad/',
+                           routes_pathname_prefix='/modalidad/')
 
 app_modalidad.layout = html.Div([
     html.H1("Distribución por Modalidad de Cita"),
@@ -300,7 +300,7 @@ def update_bar_modalidad(clickData):
 
 
 # App 4: Por Estado de Seguro
-app_seguro = dash.Dash(__name__, server=server, url_base_pathname='/asegurados/',
+app_seguro = dash.Dash(__name__, server=server,
                        requests_pathname_prefix='/asegurados/',
                        routes_pathname_prefix='/asegurados/')
 
@@ -369,7 +369,7 @@ df['MES'] = df['DIA_SOLICITACITA'].dt.to_period('M').astype(str)
 citas_por_mes = df.groupby('MES').size().reset_index(name='CANTIDAD_CITAS')
 
 
-app_tiempo = dash.Dash(__name__, server=server, url_base_pathname='/tiempo/',
+app_tiempo = dash.Dash(__name__, server=server,
                        requests_pathname_prefix='/tiempo/',
                        routes_pathname_prefix='/tiempo/')
 
@@ -478,7 +478,7 @@ especialidades = {17: 'GERIATRIA',
  60: 'URODINAMIA',
  15: 'ENDOCRINOLOGIA TUBERCULOSIS'}
 
-simulador_app = dash.Dash(__name__, server=server, url_base_pathname='/simulador/',
+simulador_app = dash.Dash(__name__, server=server,
                           requests_pathname_prefix='/simulador/',
                           routes_pathname_prefix='/simulador/')
 
