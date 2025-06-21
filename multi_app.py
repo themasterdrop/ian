@@ -167,6 +167,7 @@ def index():
 app_edad = dash.Dash(__name__, server=server,
                      requests_pathname_prefix='/edad/',
                      routes_pathname_prefix='/edad/',
+                     url_base_pathname='/edad/',
                      serve_locally=False)
 
 app_edad.layout = html.Div([
@@ -214,6 +215,7 @@ def update_pie_chart_edad(clickData):
 app_espera = dash.Dash(__name__, server=server,
                        requests_pathname_prefix='/espera/',
                        routes_pathname_prefix='/espera/',
+                       url_base_pathname='/espera/',
                        serve_locally=False)
 
 
@@ -262,6 +264,7 @@ def update_pie_chart_espera(clickData):
 app_modalidad = dash.Dash(__name__, server=server,
                            requests_pathname_prefix='/modalidad/',
                            routes_pathname_prefix='/modalidad/',
+                           url_base_pathname='/modalidad/',
                            serve_locally=False)
 
 app_modalidad.layout = html.Div([
@@ -307,6 +310,7 @@ def update_bar_modalidad(clickData):
 app_seguro = dash.Dash(__name__, server=server,
                        requests_pathname_prefix='/asegurados/',
                        routes_pathname_prefix='/asegurados/',
+                       url_base_pathname='/asegurados/',
                        serve_locally=False)
 
 app_seguro.layout = html.Div([
@@ -375,9 +379,10 @@ citas_por_mes = df.groupby('MES').size().reset_index(name='CANTIDAD_CITAS')
 
 
 app_tiempo = dash.Dash(__name__, server=server,
-                        requests_pathname_prefix='/tiempo/',
-                        routes_pathname_prefix='/tiempo/',
-                        serve_locally=False)
+                         requests_pathname_prefix='/tiempo/',
+                         routes_pathname_prefix='/tiempo/',
+                         url_base_pathname='/tiempo/',
+                         serve_locally=False)
 app_tiempo.layout = html.Div([
     html.H1("Citas Agendadas por Mes"),
     dcc.Graph(
@@ -484,8 +489,10 @@ especialidades = {17: 'GERIATRIA',
  15: 'ENDOCRINOLOGIA TUBERCULOSIS'}
 
 simulador_app = dash.Dash(__name__, server=server,
-                          requests_pathname_prefix='/simulador/',
-                          routes_pathname_prefix='/simulador/')
+                           requests_pathname_prefix='/simulador/',
+                           routes_pathname_prefix='/simulador/',
+                           url_base_pathname='/simulador/',
+                           serve_locally=False)
 
 simulador_app.layout = html.Div([
     html.H2("Simulador de Tiempo de Espera de Citas"),
