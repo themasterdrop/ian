@@ -516,12 +516,12 @@ def predecir(n_clicks, especialidad, edad, dia, semana_anio):
 
 
 application = DispatcherMiddleware(server, {
-    '/edad': app_edad.server,
-    '/espera': app_espera.server,
-    '/modalidad': app_modalidad.server,
-    '/asegurados': app_seguro.server,
-    '/tiempo': app_tiempo.server,
-    '/simulador': simulador_app.server,
+    '/edad': app_edad.wsgi_app,
+    '/espera': app_espera.wsgi_app,
+    '/modalidad': app_modalidad.wsgi_app,
+    '/asegurados': app_seguro.wsgi_app,
+    '/tiempo': app_tiempo.wsgi_app,
+    '/simulador': simulador_app.wsgi_app,
 })
 
 if __name__ == '__main__':
