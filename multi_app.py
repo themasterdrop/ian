@@ -21,13 +21,15 @@ dia_actual = hoy.day
 semana_anio = hoy.isocalendar()[1]
 
 
-# Cargar modelo desde Dropbox
-dropbox_url = "https://www.dropbox.com/scl/fi/somo7gl8ugbij77c39n69/modelo_forest.pkl?rlkey=ts50pm44r7tvrx1wpnvc7zcil&st=rbjnpvtu&dl=1"
+
+# ID del archivo en Google Drive
+file_id = "1wrdWPjF47w7IEf0WkRWMLTVgPWqT3Jpf"  # Reemplaza con tu ID real
+drive_url = f"https://drive.google.com/uc?export=download&id={file_id}"
 modelo_path = "modelo_forest.pkl"
 
 if not os.path.exists(modelo_path):
-    print("Descargando modelo desde Dropbox...")
-    r = requests.get(dropbox_url, stream=True)
+    print("Descargando modelo desde Google Drive...")
+    r = requests.get(drive_url, stream=True)
     with open(modelo_path, 'wb') as f:
         for chunk in r.iter_content(chunk_size=8192):
             f.write(chunk)
