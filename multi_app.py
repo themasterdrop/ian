@@ -165,7 +165,7 @@ def index():
 
 
 # App 1: Por Rango de Edad
-app_edad = dash.Dash(__name__, server=True, url_base_pathname='/edad/')
+app_edad = dash.Dash(__name__, server=server, url_base_pathname='/edad/')
 app_edad.layout = html.Div([
     html.H1("Distribución por Rango de Edad"),
     dcc.Graph(id='histogram-edad', figure=px.histogram(
@@ -208,7 +208,7 @@ def update_pie_chart_edad(clickData):
     )
 
 # App 2: Por Rango de Días de Espera
-app_espera = dash.Dash(__name__, server=True, url_base_pathname='/espera/')
+app_espera = dash.Dash(__name__, server=server, url_base_pathname='/espera/')
 app_espera.layout = html.Div([
     html.H1("Distribución por Tiempo de Espera"),
     dcc.Graph(id='histogram-espera', figure=px.histogram(
@@ -251,7 +251,7 @@ def update_pie_chart_espera(clickData):
     )
 
 # App 3: Por Modalidad de Cita
-app_modalidad = dash.Dash(__name__, server=True, url_base_pathname='/modalidad/')
+app_modalidad = dash.Dash(__name__, server=server, url_base_pathname='/modalidad/')
 app_modalidad.layout = html.Div([
     html.H1("Distribución por Modalidad de Cita"),
     dcc.Graph(id='pie-modalidad', figure=px.pie(
@@ -292,7 +292,7 @@ def update_bar_modalidad(clickData):
 
 
 # App 4: Por Estado de Seguro
-app_seguro = dash.Dash(__name__, server=True, url_base_pathname='/asegurados/')
+app_seguro = dash.Dash(__name__, server=server, url_base_pathname='/asegurados/')
 app_seguro.layout = html.Div([
     html.H1("Distribución por Estado del Seguro"),
     dcc.Graph(id='pie-seguro', figure=px.pie(
@@ -358,7 +358,7 @@ df['MES'] = df['DIA_SOLICITACITA'].dt.to_period('M').astype(str)
 citas_por_mes = df.groupby('MES').size().reset_index(name='CANTIDAD_CITAS')
 
 
-app_tiempo = dash.Dash(__name__, server=True, url_base_pathname='/tiempo/')
+app_tiempo = dash.Dash(__name__, server=server, url_base_pathname='/tiempo/')
 app_tiempo.layout = html.Div([
     html.H1("Citas Agendadas por Mes"),
     dcc.Graph(
@@ -464,7 +464,7 @@ especialidades = {17: 'GERIATRIA',
  60: 'URODINAMIA',
  15: 'ENDOCRINOLOGIA TUBERCULOSIS'}
 
-simulador_app = dash.Dash(__name__, server=True, url_base_pathname='/simulador/')
+simulador_app = dash.Dash(__name__, server=server, url_base_pathname='/simulador/')
 
 simulador_app.layout = html.Div([
     html.H2("Simulador de Tiempo de Espera de Citas"),
