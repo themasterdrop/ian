@@ -164,7 +164,7 @@ def index():
 
 
 # App 1: Por Rango de Edad
-aapp_edad = dash.Dash(__name__, server=server,
+app_edad = dash.Dash(__name__, server=server,
                      requests_pathname_prefix='/edad/',
                      routes_pathname_prefix='/edad/',
                      serve_locally=False)
