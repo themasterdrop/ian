@@ -22,7 +22,7 @@ semana_anio = hoy.isocalendar()[1]
 
 
 # ID del archivo en Google Drive
-file_id = "1wrdWPjF47w7IEf0WkRWMLTVgPWqT3Jpf"  # Reemplaza con tu ID real
+file_id = "1OPLZlniHGhfXZGBymKFHyGeb4wmQ4o1A"  # Reemplaza con tu ID real
 drive_url = f"https://drive.google.com/uc?export=download&id={file_id}"
 modelo_path = "modelo_forest.pkl"
 
